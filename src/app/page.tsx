@@ -17,14 +17,14 @@ export default function Home() {
   const showModal = useAppSelector((state: RootState) => state.persistedReducer.showModal);
 
   useEffect(() => {
-    console.log('triggered by useEffect');
-    dispatch(fetchLatestPrices({fiat: "USD", code:selectedPlatForm}));
+    console.log("triggered by useEffect");
+    dispatch(fetchLatestPrices({ fiat: "USD", code: selectedPlatForm }));
   }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      console.log('triggered by interval');
-      dispatch(fetchLatestPrices({fiat:"USD", code: selectedPlatForm}));
+      console.log("triggered by interval");
+      dispatch(fetchLatestPrices({ fiat: "USD", code: selectedPlatForm }));
     }, 60000); // 60 seconds interv
     return () => clearInterval(intervalId);
   }, [dispatch]);
@@ -47,24 +47,29 @@ export default function Home() {
 
   if (cryptoPrice.isError) {
     return <div>Error</div>;
+  } else if (cryptoPrice.isLoading) {
+    <div>
+      <CircularProgress />
+      Loading...
+    </div>;
   } else if (cryptoPrice.isSuccess) {
     return (
       <Box>
-        {cryptoPrice.isLoading && (
-          <div>
-            <CircularProgress />
-            Loading...
-          </div>
-        )}
         <Stack direction={"row"} justifyContent={"space-between"} paddingInline={2}>
-          <div style={{backgroundColor: "black", borderRadius: "0.75rem", padding: 8}}><Typography color={"white"} variant="h5">liveCoinWatch ranking: {cryptoPrice.cryptos[selectedPlatForm][0].rank}</Typography></div>
-          
+          <div style={{ backgroundColor: "black", borderRadius: "0.75rem", padding: 8 }}>
+            <Typography color={"white"} variant="h5">
+              liveCoinWatch ranking: {cryptoPrice.cryptos[selectedPlatForm][0].rank}
+            </Typography>
+          </div>
+
           <Stack direction={"row"} spacing={0.5} alignItems={"center"}>
             <IconButton size="small" disabled>
               <img src={cryptoPrice.cryptos[selectedPlatForm][0].png32} />
             </IconButton>
             <Typography variant="h5">{cryptoPrice.cryptos[selectedPlatForm][0].name}</Typography>
-            <Typography color={"gray"} fontSize={"0.8rem"} fontStyle={"italic"} variant="h5">{cryptoPrice.cryptos[selectedPlatForm][0].code}</Typography>
+            <Typography color={"gray"} fontSize={"0.8rem"} fontStyle={"italic"} variant="h5">
+              {cryptoPrice.cryptos[selectedPlatForm][0].code}
+            </Typography>
           </Stack>
         </Stack>
         <Grid />
